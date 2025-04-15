@@ -10,31 +10,44 @@ const password = process.argv[2];
 const url = `mongodb+srv://ingady:${password}@nodeexpressprojects.shkmp.mongodb.net/phonebookApp?retryWrites=true&w=majority&appName=NodeExpressProjects`;
 
 mongoose.set('strictQuery', false);
-mongoose.connect(url);
 
-// Schema
-const personSchema = new mongoose.Schema({
-  name: String,
-  number: String,
-});
-
-// Model
-const Person = mongoose.model('Person', personSchema);
-
-// New person
-const person = new Person({
-  name: 'Arto Vihavainen',
-  number: '040-1234556',
-});
-
-// Save and fetch
-person.save().then(() => {
-  console.log('person saved!');
-
-  Person.find({}).then((result) => {
-    result.forEach((person) => {
-      console.log(person);
+mongoose
+  .connect(url)
+  .then(() => {
+    // Schema
+    const personSchema = new mongoose.Schema({
+      name: String,
+      number: String,
     });
-    mongoose.connection.close();
+
+    // Model
+    const Person = mongoose.model('Person', personSchema);
+
+    // If only the password is provided, display all people in the phonebook
+    if (process.argv.length === 3) {
+      Person.find({}).then((result) => {
+        console.log('phonebook:');
+        result.forEach((person) => {
+          console.log(`${person.name} ${person.number}`);
+        });
+        mongoose.connection.close();
+      });
+    }
+
+    // If a name and a number are provided, add a new person to the phonebook
+    if (process.argv.length === 5) {
+      const name = process.argv[3];
+      const number = process.argv[4];
+
+      const person = new Person({ name, number });
+
+      person.save().then(() => {
+        console.log(`added ${name} number ${number} to phonebook`);
+        mongoose.connection.close();
+      });
+    }
+  })
+  .catch((err) => {
+    console.error('Error connecting to MongoDB:', err);
+    process.exit(1);
   });
-});
