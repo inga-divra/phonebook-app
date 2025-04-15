@@ -1,3 +1,4 @@
+require('dotenv').config();
 const mongoose = require('mongoose');
 
 if (process.argv.length < 3) {
@@ -5,7 +6,7 @@ if (process.argv.length < 3) {
   process.exit(1);
 }
 
-const password = process.argv[2];
+const password = process.env.MONGODB_PASSWORD;
 
 const url = `mongodb+srv://ingady:${password}@nodeexpressprojects.shkmp.mongodb.net/phonebookApp?retryWrites=true&w=majority&appName=NodeExpressProjects`;
 
