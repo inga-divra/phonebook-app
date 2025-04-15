@@ -12,29 +12,28 @@ const url = `mongodb+srv://ingady:${password}@nodeexpressprojects.shkmp.mongodb.
 mongoose.set('strictQuery', false);
 mongoose.connect(url);
 
-// Define the schema for the note
-const noteSchema = new mongoose.Schema({
-  content: String,
-  important: Boolean,
+// Schema
+const personSchema = new mongoose.Schema({
+  name: String,
+  number: String,
 });
 
-// Create a model based on the note schema
-const Note = mongoose.model('Note', noteSchema);
+// Model
+const Person = mongoose.model('Person', personSchema);
 
-// Create a new note
-const note = new Note({
-  content: 'HTML is easy',
-  important: true,
+// New person
+const person = new Person({
+  name: 'Arto Vihavainen',
+  number: '040-1234556',
 });
 
-// Save the note to the database
-note.save().then((result) => {
-  console.log('note saved!');
+// Save and fetch
+person.save().then(() => {
+  console.log('person saved!');
 
-  // Fetch all notes from the database
-  Note.find({}).then((result) => {
-    result.forEach((note) => {
-      console.log(note);
+  Person.find({}).then((result) => {
+    result.forEach((person) => {
+      console.log(person);
     });
     mongoose.connection.close();
   });
