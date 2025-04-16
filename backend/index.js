@@ -70,6 +70,20 @@ app.put('/api/persons/:id', (req, res, next) => {
     .catch((error) => next(error));
 });
 
+//Get SINGLE PERSON
+app.get('/api/persons/:id', (req, res, next) => {
+  Person.findById(req.params.id)
+    .then((person) => {
+      if (person) {
+        res.json(person);
+      } else {
+        res.status(404).end();
+      }
+    })
+    .catch((error) => next(error));
+});
+
+//
 app.get('/info', (req, res) => {
   const personsTotal = persons.length;
   const currentTime = new Date();
@@ -77,16 +91,6 @@ app.get('/info', (req, res) => {
         <p>Phonebook has info for ${personsTotal} people</p>
         <p>${currentTime}</p>
         `);
-});
-
-app.get('/api/persons/:id', (req, res) => {
-  const id = req.params.id.toString();
-  const person = persons.find((person) => person.id === id);
-  if (person) {
-    res.json(person);
-  } else {
-    res.status(404).end();
-  }
 });
 
 // DELETE Person/Contact
