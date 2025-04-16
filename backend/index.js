@@ -28,8 +28,26 @@ app.get('/api/persons', (req, res) => {
   });
 });
 
-app.get('/api/persons', (req, res) => {
-  res.json(persons);
+// Create NEW PERSON/CONTACT
+app.post('/api/persons', (req, res) => {
+  const body = req.body;
+
+  if (!body.name) {
+    return res.status(400).json({ error: 'name missing' });
+  }
+
+  if (!body.number) {
+    return res.status(400).json({ error: 'number missing' });
+  }
+
+  const person = new Person({
+    name: body.name,
+    number: body.number,
+  });
+
+  person.save().then((savedPerson) => {
+    res.json(savedPerson);
+  });
 });
 
 app.get('/info', (req, res) => {
@@ -55,44 +73,6 @@ app.delete('/api/persons/:id', (req, res) => {
   const id = req.params.id.toString();
   persons = persons.filter((person) => person.id !== id);
   res.status(204).end();
-});
-
-const generateId = () => {
-  const id = Math.floor(Math.random() * 1000000);
-  return String(id);
-};
-
-app.post('/api/persons', (req, res) => {
-  const body = req.body;
-
-  if (!body.name) {
-    return res.status(400).json({
-      error: 'name missing',
-    });
-  }
-
-  if (!body.number) {
-    return res.status(400).json({
-      error: 'number missing',
-    });
-  }
-
-  const notUniqueName = persons.some((person) => person.name === body.name);
-  if (notUniqueName) {
-    return res.status(400).json({
-      error: 'name must be unique',
-    });
-  }
-
-  const person = {
-    name: body.name,
-    number: body.number,
-    id: generateId(),
-  };
-
-  persons = persons.concat(person);
-
-  res.json(person);
 });
 
 const PORT = process.env.PORT || 3001;
