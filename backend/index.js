@@ -50,6 +50,26 @@ app.post('/api/persons', (req, res) => {
   });
 });
 
+//UPDATE Person
+app.put('/api/persons/:id', (req, res, next) => {
+  const { name, number } = req.body;
+
+  Person.findById(req.params.id)
+    .then((person) => {
+      if (!person) {
+        return res.status(404).end();
+      }
+
+      person.name = name;
+      person.number = number;
+
+      return person.save().then((updatedPerson) => {
+        res.json(updatedPerson);
+      });
+    })
+    .catch((error) => next(error));
+});
+
 app.get('/info', (req, res) => {
   const personsTotal = persons.length;
   const currentTime = new Date();
