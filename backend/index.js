@@ -83,14 +83,17 @@ app.get('/api/persons/:id', (req, res, next) => {
     .catch((error) => next(error));
 });
 
-//
-app.get('/info', (req, res) => {
-  const personsTotal = persons.length;
-  const currentTime = new Date();
-  res.send(`
+//GET INFO
+app.get('/info', (req, res, next) => {
+  Person.countDocuments({})
+    .then((personsTotal) => {
+      const currentTime = new Date();
+      res.send(`
         <p>Phonebook has info for ${personsTotal} people</p>
         <p>${currentTime}</p>
-        `);
+      `);
+    })
+    .catch((error) => next(error));
 });
 
 // DELETE Person/Contact
