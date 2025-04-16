@@ -78,6 +78,23 @@ app.delete('/api/persons/:id', (req, res, next) => {
     .catch((error) => next(error));
 });
 
+// Middleware for handling errors
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message);
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' });
+  }
+  next(error);
+};
+app.use(errorHandler);
+
+// Middleware for handling unknown endpoints
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' });
+};
+app.use(unknownEndpoint);
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
