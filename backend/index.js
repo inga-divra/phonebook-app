@@ -29,7 +29,7 @@ app.get('/api/persons', (req, res) => {
 });
 
 // Create NEW PERSON/CONTACT
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
   const body = req.body;
 
   if (!body.name) {
@@ -45,9 +45,12 @@ app.post('/api/persons', (req, res) => {
     number: body.number,
   });
 
-  person.save().then((savedPerson) => {
-    res.json(savedPerson);
-  });
+  person
+    .save()
+    .then((savedPerson) => {
+      res.json(savedPerson);
+    })
+    .catch((error) => next(error));
 });
 
 //UPDATE Person
@@ -107,7 +110,7 @@ app.delete('/api/persons/:id', (req, res, next) => {
 
 // Middleware for handling errors
 const errorHandler = (error, request, response, next) => {
-  console.error(error.message);
+  //console.error(error.message);
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' });
