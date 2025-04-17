@@ -72,12 +72,13 @@ const App = () => {
             setNotificationMsg(null)
           }, 5000)
         }).catch(error => {
-          setNotificationMsg(error.response.data.error)
+          const errorMessage = error.response?.data?.error || 'Unknown error occurred';
+          setNotificationMsg(errorMessage);
           setNotificationType('error');
-          console.log(error.response.data)
+          console.error(error);
           setTimeout(() => {
-            setNotificationMsg(null)
-          }, 5000)
+            setNotificationMsg(null);
+          }, 5000);
         })
     }
   }
