@@ -72,14 +72,14 @@ const App = () => {
             setNotificationMsg(null)
           }, 5000)
         }).catch(error => {
-          const errorMessage = error.response?.data?.error || 'Unknown error occurred';
+          const errorMessage = error?.response?.data?.error || 'Unknown error occurred';
           setNotificationMsg(errorMessage);
           setNotificationType('error');
-          console.error(error);
+          console.log('Validation error from backend:', errorMessage);
           setTimeout(() => {
             setNotificationMsg(null);
           }, 5000);
-        })
+        });
     }
   }
 
