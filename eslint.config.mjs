@@ -29,6 +29,11 @@ export default defineConfig([
     }
   },
   {
-    ignores: ['dist/**', 'dtst/**', 'frontend/**', 'node_modules/**']
+    ignores: [
+      'frontend/**',
+      'node_modules/**',
+      'backend/dist/**',
+      'backend/dtst/**'
+    ]
   }
 ])
