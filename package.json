@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=production node index.js",
-    "dev": "cross-env NODE_ENV=development node --watch index.js",
-    "test": "cross-env  NODE_ENV=test node --test",
-    "deploy:full": "npm run build:ui && git add . && git commit -m \"uibuild\" && git push",
+    "start": "cross-env NODE_ENV=production node backend/index.js",
+    "dev": "cross-env NODE_ENV=development node --watch backend/index.js",
+    "test": "cross-env NODE_ENV=test node --test",
+    "build:ui": "rm -rf dist && npm run build && cp -r dist ./",
+    "deploy:full": "npm run build:ui && git add . && git commit -m 'UI build' && git push",
     "lint": "eslint ."
   },
   "keywords": [],
@@ -21,7 +22,7 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
-    "@stylistic/eslint-plugin-js": "^4.2.0",
-    "globals": "^16.0.0"
+    "globals": "^16.0.0",
+    "supertest": "^7.1.0"
   }
 }
