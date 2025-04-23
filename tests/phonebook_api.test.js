@@ -1,15 +1,15 @@
+const assert = require('node:assert')
+const { test, after, beforeEach } = require('node:test')
+const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../backend/app')
-const { test, after, beforeEach } = require('node:test')
-const assert = require('node:assert')
-const mongoose = require('mongoose')
-const Person = require('../models/person')
+const Person = require('../backend/models/person')
 
 const api = supertest(app)
 
 const initialPersons = [
-  { name: 'Arto Hellas', number: '040-123456' },
-  { name: 'Ada Lovelace', number: '39-44-5323523' }
+  { name: 'Peeter Ronneberg', number: '09-4567899' },
+  { name: 'John Sture', number: '044-6543210' }
 ]
 
 beforeEach(async () => {
@@ -17,9 +17,23 @@ beforeEach(async () => {
   await Person.insertMany(initialPersons)
 })
 
-test('all phonebook is returned', async () => {
-  const response = await api.get('/api/persons') // убедись, что endpoint правильный
+test('all persons are returned', async () => {
+  const response = await api.get('/api/persons')
   assert.strictEqual(response.body.length, initialPersons.length)
+})
+
+test('a specific person is within the returned persons', async () => {
+  const response = await api.get('/api/persons')
+
+  const names = response.body.map((person) => person.name)
+  assert(names.includes('Peeter Ronneberg'))
+})
+
+test('another specific person is within the returned persons', async () => {
+  const response = await api.get('/api/persons')
+
+  const names = response.body.map((person) => person.name)
+  assert(names.includes('John Sture'))
 })
 
 after(async () => {
