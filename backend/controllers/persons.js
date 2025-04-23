@@ -9,7 +9,7 @@ personsRouter.get('/', async (req, res) => {
 })
 
 // Create NEW PERSON/CONTACT
-personsRouter.post('/', (req, res, next) => {
+personsRouter.post('/', async (req, res, next) => {
   const body = req.body
 
   if (!body.name) {
@@ -25,12 +25,8 @@ personsRouter.post('/', (req, res, next) => {
     number: body.number
   })
 
-  person
-    .save()
-    .then((savedPerson) => {
-      res.json(savedPerson)
-    })
-    .catch((error) => next(error))
+  const savedPerson = await person.save()
+  res.status(201).json(savedPerson)
 })
 
 //UPDATE Person
@@ -54,16 +50,13 @@ personsRouter.put('/:id', (req, res, next) => {
 })
 
 //Get SINGLE PERSON
-personsRouter.get('/:id', (req, res, next) => {
-  Person.findById(req.params.id)
-    .then((person) => {
-      if (person) {
-        res.json(person)
-      } else {
-        res.status(404).end()
-      }
-    })
-    .catch((error) => next(error))
+personsRouter.get('/:id', async (req, res, next) => {
+  const person = await Person.findById(req.params.id)
+  if (person) {
+    res.json(person)
+  } else {
+    res.status(404).end()
+  }
 })
 
 //GET INFO
@@ -80,12 +73,9 @@ personsRouter.get('/info', (req, res, next) => {
 })
 
 // DELETE Person/Contact
-personsRouter.delete('/:id', (req, res, next) => {
-  Person.findByIdAndDelete(req.params.id)
-    .then(() => {
-      res.status(204).end()
-    })
-    .catch((error) => next(error))
+personsRouter.delete('/:id', async (req, res) => {
+  await Person.findByIdAndDelete(req.params.id)
+  res.status(204).end()
 })
 
 module.exports = personsRouter
