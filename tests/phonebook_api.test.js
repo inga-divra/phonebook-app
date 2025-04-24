@@ -15,7 +15,7 @@ const initialPersons = [
 
 beforeEach(async () => {
   await Person.deleteMany({})
-  await Person.insertMany(initialPersons)
+  await Person.insertMany(helper.initialPersons)
 })
 
 test('all persons are returned', async () => {
